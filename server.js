@@ -1,6 +1,6 @@
-const { query } = require('express');
 const express = require('express')
-const mysql = require('mysql2')
+const mysql = require('mysql2');
+const inputCheck = require('./utils/inputCheck');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -132,7 +132,37 @@ app.delete('/api/candidate/:id',(req, res) => {
 })
 
 
+// Create a candidate
+app.post('/api/candidate', (req, res) => {
+  const errors = inputCheck(req.body, 'first_name', 'last_name', 'industry_connected');
+  if (errors) {
+    res.status(400).json({ error: errors });
+    return;
+  }
 
+  const sql = `INSERT INTO candidates(
+    first_name, last_name, industry_connected) VALUES
+    (?,?,?)`
+
+  const params = [req.body.first_name, req.body.last_name, req.body.industry_connected]
+    
+  db.query(sql, params, (err, data) => {
+    if(err) {
+      return res.json({
+        error: err.message
+      })
+    }
+    
+    res.status(201).json({
+      message:`Candidate was created sucessfully!`,
+      data: {
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        industry_connected: req.body.industry_connected
+      }
+    })
+  })
+});
 
 // Delete a candidate
 // app.delete('/api/candidate/:id', (req, res) => {
