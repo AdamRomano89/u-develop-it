@@ -83,6 +83,7 @@ router.put('/voter/:id', (req, res) => {
     return;
   }
 
+  db.query(sql, [email, id])
 
 })
 
