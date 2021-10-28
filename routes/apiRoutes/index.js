@@ -11,4 +11,7 @@ router.use(require('./partyRoutes'));
 // Registering Voters Routes
 router.use(require('./voterRoutes'));
 
+// Registering Voters Routes
+router.use(require('./voteRoutes'));
+
 module.exports = router;
